@@ -4,10 +4,12 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\usepackage{float}
+\setlength{\parindent}{0pt}
 
 \title{Detecting Fraudulent Job Postings:\\Exploratory Analysis and Detection Strategy}
-\author{}
-\date{}
+\author{Calvin Soe Frederick}
+\date{7 March 2026}
 
 \begin{document}
 
@@ -15,72 +17,134 @@
 
 \section{Problem Context}
 
-Online job platforms face increasing risks from fraudulent job postings that exploit job seekers.
-This analysis explores the EMSCAD dataset containing 17,880 job advertisements labeled as legitimate or fraudulent. The objective is to identify patterns associated with fraudulent postings and propose a practical detection strategy.
+Online job platforms face increasing risks from fraudulent job postings that exploit job seekers. 
+This analysis explores the EMSCAD dataset containing 17,880 job advertisements labeled as legitimate or fraudulent. This summary report identifies practical signals that can help job platforms detect fraudulent postings early and flag suspicious listings for review.
 
 \section{Dataset Audit}
 
-The dataset contains 17,880 job postings, of which 866 (4.8\%) are labeled as fraudulent.
-This indicates a highly imbalanced classification problem.
-
-The dataset contains a mixture of text fields (e.g., job descriptions and requirements),
-structured job attributes (e.g., employment type and industry), and platform metadata
-(e.g., presence of company logos and screening questions).
-
-Several data quality considerations were observed:
-\begin{itemize}
-\item Binary variables were stored as text and required conversion.
-\item Some fields such as salary\_range and benefits contain high levels of missing values.
-\item Missing information may itself provide predictive signals for fraud detection.
-\end{itemize}
+The dataset contains 17,880 job postings, of which 866 (4.8\%) are labeled as fraudulent. This indicates a highly imbalanced classification problem. The dataset contains a mixture of text fields (e.g., job descriptions and requirements),
+structured job attributes (e.g., employment type and industry), and platform metadata (e.g., presence of company logos and screening questions). 
 
 \section{Key Insights from Exploratory Analysis}
 
-\subsection{Company profile as a credibility signal}
+\subsection{Short company profiles are more likely to be fraudulent}
 
-Fraudulent postings frequently lack company profiles or contain extremely short descriptions of the employer. Legitimate postings typically provide richer company descriptions.
+\begin{itemize}
+\item Fraudulent postings are heavily concentrated around near-zero company profile text lengths. In contrast, legitimate postings show a much wider range of profile lengths and often include longer company descriptions. (Figure 3.1a)
+\item Description lengths appear similar between the two groups. (Figure 3.1b). However, fraudulent postings tend to have requirements shorter than about 500 characters. (Figure 3.1c)
+\item Hence, scammers invest less effort in describing the employer and the qualifications needed for the role, making company profile presence and requirements length useful signals for detecting fraud.
+\end{itemize}
 
-\subsection{Low-effort postings correlate with fraud}
-
-Fraudulent postings are more likely to lack company logos and screening questions,
-suggesting lower credibility of the posting.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.6\textwidth]{figures/fraud_distribution.png}
-\caption{Distribution of legitimate vs fraudulent postings}
+\begin{figure}[H]
+    \centering
+    
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/company_profile_length_by_fraud.png}
+        \small Figure 3.1a: Comparing company profile text length to fraud
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/description_length_by_fraud.png}
+        \small Figure 3.1b: Comparing description text length to fraud
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/requirements_length_by_fraud.png}
+        \small Figure 3.1c: Comparing requirements text length to fraud
+    \end{minipage}
 \end{figure}
 
-\subsection{Textual patterns}
+\subsection{Missing platform credibility signals such as logos, remote work, screening questions correlate with fraud.}
 
-Fraudulent postings often contain shorter requirements sections and vague job descriptions,
-indicating potential linguistic signals useful for detection.
+\begin{itemize}
+\item Job listings without company logos have a fraud rate of about 16\%, compared with roughly 2\% for postings that include a logo. (Figure 3.2a)
+\item Similarly, listings without questions have a fraud rate of around 7\%, more than double the roughly 3\% fraud rate for postings that require applicant responses. (Figure 3.2b) 
+\item Remote postings also show higher fraud rates (about 8\%) compared with non-remote postings (around 5\%). (Figure 3.2c)
+\item Overall, postings that lack company information or platform verification features are much more likely to be fraudulent.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fraud_rate_by_company_logo.png}
+        \small Figure 3.2a 
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fraud_rate_by_has_questions.png}
+        \small Figure 3.2b
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fraud_rate_by_telecommuting.png}
+        \small Figure 3.2c
+    \end{minipage}
+\end{figure}
+
+\subsection{Recurring patterns and signals}
+
+Fraudulent postings often contain shorter requirements sections and vague job descriptions, indicating potential linguistic signals useful for detection.
+
+\subsection{Challenges and Limitations}
+
+Several characteristics of the dataset present challenges for the proposed approach.
+
+\begin{itemize}
+
+\item \textbf{Class imbalance.} Fraudulent postings represent only about 4.8\% of the dataset. Evaluation should therefore focus on metrics such as precision, recall, and F1 score rather than accuracy.
+
+\item \textbf{High-dimensional text features.} Many predictive signals come from textual fields such as job descriptions and company profiles. A simple and interpretable classification model can serve as a strong baseline, with more advanced models explored later if needed.
+
+\item \textbf{Evolving fraud patterns.} The dataset contains job postings collected between 2012 and 2014. Scam tactics may evolve over time, so a real-world system would need to be retrained regularly using more recent data.
+
+\item Despite these limitations, the dataset still provides strong signals for identifying fraudulent postings, particularly through employer credibility indicators and platform-level metadata.
+
+\end{itemize}
 
 \section{Proposed Detection Approach}
 
-A hybrid fraud detection approach combining textual features and structured metadata is recommended.
-
-Key feature groups include:
+A hybrid fraud detection approach combining textual features and structured metadata is recommended. Key feature groups include:
 \begin{itemize}
 \item Employer credibility signals (company profile presence and length)
-\item Text features derived from TF-IDF representations of job descriptions and requirements
-\item Platform metadata such as company logos, screening questions, and telecommuting
+\item Text features (TF-IDF representations) of job descriptions and requirements, text length indicators
+\item Platform metadata such as \texttt{has\_company\_logo}, \texttt{has\_questions}, and \texttt{telecommuting}
 \end{itemize}
 
-A logistic regression model with TF-IDF features provides a strong and interpretable baseline,
-with tree-based models (e.g., Random Forest or Gradient Boosting) as potential extensions.
+A logistic regression model with text features provides a strong and interpretable baseline, with tree-based models (e.g., Random Forest or Gradient Boosting) as potential extensions for non-inear relationships
 
 \section{Evaluation and Deployment Strategy}
+
+Because fraud detection is a risk management problem, evaluation should focus on detecting scams while minimizing false alarms.
+
+Model performance would first be evaluated using a hold-out validation set (80/20, 70/30) or stratified cross-validation to ensure reliable results despite the dataset class imbalance.
 
 Given the class imbalance, evaluation should focus on:
 
 \begin{itemize}
-\item Precision
-\item Recall
-\item F1 score
-\item Precision--Recall AUC
+\item Precision - proportion of flagged postings that are actually fraudulent
+\item Recall - ability to detect fraudulent postings
+\item F1 score - balance between precision and recall
 \end{itemize}
 
-In practice, the model would function as a risk scoring system that flags suspicious postings for manual review.
+Additionally, fields such as \texttt{in\_balanced\_dataset} should not be used as model features. This variable is related to how the dataset was constructed rather than information available at prediction time, and including it could introduce data leakage.
+
+If the model consistently detects a high proportion of fraudulent postings while keeping false positives at a manageable level, it would be suitable for pilot deployment.
+
+\section{Operational deployment}
+
+A realistic system would function as a risk scoring tool:
+
+\begin{center}
+    Job posting submitted $\rightarrow$ Feature extraction $\rightarrow$ Fraud risk score $\rightarrow$ High-risk postings flagged for manual review
+    \end{center}
+
+This approach allows human moderators to review suspicious postings while minimizing disruption to legitimate employers.
 
 \end{document}
