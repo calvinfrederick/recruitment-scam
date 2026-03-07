@@ -6,9 +6,8 @@ This project explores the EMSCAD dataset to identify patterns associated with fr
 
 Sections
 - Dataset audit
-- Exploratory analysis
-- Feature engineering strategy
-- Detection pipeline design
+- Exploratory Data Analysis
+- Feature Selection
 
 Dataset not included in repository due to size.
 Download EMSCAD dataset from:
