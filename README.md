@@ -4,7 +4,8 @@ Predict a potential recruitment scam using machine learning.
 
 This project explores the EMSCAD dataset to identify patterns associated with fraudulent job postings.
 
-Refer to Jupyter Notebook file, "my_notebook.ipynb" for more detail 
+Refer to Jupyter Notebook file, "my_notebook.ipynb" for more details.
+
 Summary report found under, "report/report.pdf" 
 
 Dataset not included in repository due to size.
