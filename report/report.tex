@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\title{Detecting Fraudulent Job Postings:\\Exploratory Analysis and Detection Strategy}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem Context}
+
+Online job platforms face increasing risks from fraudulent job postings that exploit job seekers.
+This analysis explores the EMSCAD dataset containing 17,880 job advertisements labeled as legitimate or fraudulent. The objective is to identify patterns associated with fraudulent postings and propose a practical detection strategy.
+
+\section{Dataset Audit}
+
+The dataset contains 17,880 job postings, of which 866 (4.8\%) are labeled as fraudulent.
+This indicates a highly imbalanced classification problem.
+
+The dataset contains a mixture of text fields (e.g., job descriptions and requirements),
+structured job attributes (e.g., employment type and industry), and platform metadata
+(e.g., presence of company logos and screening questions).
+
+Several data quality considerations were observed:
+\begin{itemize}
+\item Binary variables were stored as text and required conversion.
+\item Some fields such as salary\_range and benefits contain high levels of missing values.
+\item Missing information may itself provide predictive signals for fraud detection.
+\end{itemize}
+
+\section{Key Insights from Exploratory Analysis}
+
+\subsection{Company profile as a credibility signal}
+
+Fraudulent postings frequently lack company profiles or contain extremely short descriptions of the employer. Legitimate postings typically provide richer company descriptions.
+
+\subsection{Low-effort postings correlate with fraud}
+
+Fraudulent postings are more likely to lack company logos and screening questions,
+suggesting lower credibility of the posting.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/fraud_distribution.png}
+\caption{Distribution of legitimate vs fraudulent postings}
+\end{figure}
+
+\subsection{Textual patterns}
+
+Fraudulent postings often contain shorter requirements sections and vague job descriptions,
+indicating potential linguistic signals useful for detection.
+
+\section{Proposed Detection Approach}
+
+A hybrid fraud detection approach combining textual features and structured metadata is recommended.
+
+Key feature groups include:
+\begin{itemize}
+\item Employer credibility signals (company profile presence and length)
+\item Text features derived from TF-IDF representations of job descriptions and requirements
+\item Platform metadata such as company logos, screening questions, and telecommuting
+\end{itemize}
+
+A logistic regression model with TF-IDF features provides a strong and interpretable baseline,
+with tree-based models (e.g., Random Forest or Gradient Boosting) as potential extensions.
+
+\section{Evaluation and Deployment Strategy}
+
+Given the class imbalance, evaluation should focus on:
+
+\begin{itemize}
+\item Precision
+\item Recall
+\item F1 score
+\item Precision--Recall AUC
+\end{itemize}
+
+In practice, the model would function as a risk scoring system that flags suspicious postings for manual review.
+
+\end{document}
