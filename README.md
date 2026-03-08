@@ -1,4 +1,4 @@
-# Employment Scam Detection
+# Employment Scam Detection (GovTech Assessment)
 
 Predict a potential recruitment scam using machine learning.
 
