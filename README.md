@@ -1,13 +1,30 @@
-# Employment Scam Detection
+# Recruitment Scam Detection
 
-Predict a potential recruitment scam using machine learning.
+A machine learning project that predicts potentially fraudulent recruitment postings using the EMSCAD dataset. The system identifies patterns associated with scam job ads so they can be flagged for manual review before reaching job seekers.
 
-This project explores the EMSCAD dataset to identify patterns associated with fraudulent job postings.
+## Setup
 
-Refer to Jupyter Notebook file, "my_notebook.ipynb" for more details.
+1. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   ```
 
-Summary report found under, "report/report.pdf" 
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Dataset not included in repository due to size.
-Download EMSCAD dataset from:
-https://www.kaggle.com/datasets/borismarjanovic/price-volume-data-for-all-us-stocks-etfs
+3. **Download the dataset** (not included due to size). Place `DataSet.csv` in the project root. You can find the EMSCAD/recruitment scam dataset on [Kaggle](https://www.kaggle.com/datasets/amruthjithrajvr/recruitment-scam).
+
+## Project Structure
+
+| File / Folder | Description |
+|---------------|-------------|
+| `my_notebook.ipynb` | Full analysis, EDA, and model training |
+| `report/report.pdf` | Summary report |
+| `requirements.txt` | Python dependencies |
+
+## Usage
+
+Open and run `my_notebook.ipynb` in Jupyter to explore the analysis and reproduce the results.
