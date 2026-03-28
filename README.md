@@ -1,4 +1,4 @@
-# Employment Scam Detection (GovTech Assessment)
+# Employment Scam Detection
 
 A machine learning project that discusses the prediction of potentially fraudulent recruitment postings using the EMSCAD dataset. The system identifies patterns associated with scam job ads so they can be flagged for manual review before reaching job seekers.
 
